@@ -2,16 +2,31 @@
 <html>
 <head>
   <title>LazyNomad</title>
+  <%= include_gon %>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+<script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet'/>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+
 </head>
+
 <body>
-<ul class="nav nav-tabs">
-  <li role="presentation" class="active"><a href="#">Home</a></li>
-  <li role="presentation"><a href="#">Profile</a></li>
-  <li role="presentation"><a href="#">Messages</a></li>
-</ul>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <%= form_tag(queries_path, :method => "get", class: "navbar-form navbar-left", id: "search-form") do %>
+        <div class="input-append">
+        <%= text_field_tag :search, params[:search], class: "input-field", placeholder: "Where do you want to go?" %>
+        <%= button_to("Search!", queries_path, :method => "get", class: "btn btn-primary") %>
+        <%= button_to("Search Near Me", queries_path, :method => "get", class: "btn btn-primary", id: "geolocate") %>
+        </div>
+      <% end %>
+    </form>
+    </div>
+  </div>
+</nav>
 
 <%= yield %>
 

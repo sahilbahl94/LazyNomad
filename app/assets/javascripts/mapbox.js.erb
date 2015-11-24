@@ -1,0 +1,14 @@
+function setMap () {
+	L.mapbox.accessToken = '<%= ENV["mapbox_id"] %>';
+  var map = L.mapbox.map('map', 'mapbox.streets').setView([50.1, 0.12], 7)
+  .addControl(L.mapbox.geocoderControl('mapbox.places'))
+
+  var myLayer = L.mapbox.featureLayer().setGeoJSON(gon.geoJSON).addTo(map);
+
+  map.scrollWheelZoom.disable();
+};
+
+
+$(document).on("ready", function () {
+  setMap();
+});

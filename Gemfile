@@ -17,7 +17,7 @@ gem 'faraday'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'therubyracer', platforms: :ruby
 
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', '~> 3.3.5'
 
 gem 'autoprefixer-rails'
 
@@ -26,6 +26,8 @@ gem 'foursquare2'
 gem 'geocoder'
 
 gem 'figaro'
+
+gem 'gon'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'

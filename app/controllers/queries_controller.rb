@@ -1,8 +1,10 @@
 class QueriesController < ApplicationController
 	def index
-		# query = Query.new 
-		# response = query.get_info("London")
-		# render json: response
+		if params[:search]
+			query = Query.new
+			gon.geoJSON = query.get_info(params[:search])
+			@location_info = gon.geoJSON
+		end
 	end
 end
 
