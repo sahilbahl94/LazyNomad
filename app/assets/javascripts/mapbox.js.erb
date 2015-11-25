@@ -1,14 +1,68 @@
-function setMap () {
-	L.mapbox.accessToken = '<%= ENV["mapbox_id"] %>';
-  var map = L.mapbox.map('map', 'mapbox.streets').setView([50.1, 0.12], 7)
-  .addControl(L.mapbox.geocoderControl('mapbox.places'))
-
-  var myLayer = L.mapbox.featureLayer().setGeoJSON(gon.geoJSON).addTo(map);
-
-  map.scrollWheelZoom.disable();
-};
-
+// map.scrollWheelZoom.disable();
 
 $(document).on("ready", function () {
-  setMap();
+  L.mapbox.accessToken = '<%= ENV["mapbox_id"] %>';
+  var map = L.mapbox.map('map', 'mapbox.streets');
+
+  addMapSearchTool(map);
+  addVenues(map, gon.geoJSON);
+  sidebarNavigator(map);
+  findMyLocation(map);
+
 });
+
+function addVenues (map, geojson)  {
+  var myLayer = L.mapbox.featureLayer(geojson).addTo(map);
+  showMyLocation(map, myLayer);
+}
+
+function addMapSearchTool (map) {
+  map.addControl(L.mapbox.geocoderControl('mapbox.places'));
+}
+
+
+function sidebarNavigator (map) {
+  $(".venue").on('click', 'h3', function () {
+    var self = this;
+    map.setView([self.dataset.lat,self.dataset.lng], 14)
+  });
+}
+
+function findMyLocation (map) {
+  var geolocate = $(".geolocate");
+  if (!navigator.geolocation) {
+    geolocate.innerHTML = 'Geolocation is not available';
+  } else {
+      geolocate.on('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          map.locate();
+      });
+  }
+}
+
+function showMyLocation (map, layer) {
+  map.on('locationfound', function(e) {
+      map.fitBounds(e.bounds);
+
+      layer.setGeoJSON({
+          type: 'Feature',
+          geometry: {
+              type: 'Point',
+              coordinates: [e.latlng.lng, e.latlng.lat]
+          },
+          properties: {
+              'title': 'Current location!',
+              'marker-color': '#ff8888',
+              "marker-size": "large",
+              'marker-symbol': 'star'
+          }
+      });
+  });
+
+  var geolocate = $(".geolocate");
+  map.on('locationerror', function() {
+    geolocate.innerHTML = 'Position could not be found';
+  });
+
+}
