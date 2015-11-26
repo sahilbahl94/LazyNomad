@@ -17,7 +17,7 @@
 //= require_tree .
 
 $(document).on("ready", function () {
-  L.mapbox.accessToken = '<%= ENV["mapbox_id"] %>';
+  L.mapbox.accessToken = "<%= ENV['mapbox_id'] %>";
   var map = L.mapbox.map('map', 'mapbox.streets');
 
   addMapSearchTool(map);
