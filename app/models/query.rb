@@ -37,15 +37,15 @@ class Query < ActiveRecord::Base
 
 	def geo_format
 	location_info = {
-		"type": "Feature", 
-		"geometry": {
-			"type": "Point"
+		:type => "Feature", 
+		:geometry => {
+			:type => "Point"
 		},
-		"properties": {
+		:properties => {
 			"marker-color": "#63b6e5",
 			"marker-size": "large",
     		"marker-symbol": "rocket",
-			"icon": {}	
+			:icon => {}	
 		}
 	}
 	end
