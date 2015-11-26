@@ -39,8 +39,7 @@ class Query < ActiveRecord::Base
 	location_info = {
 		"type": "Feature", 
 		"geometry": {
-			"type": "Point",
-			"coordinates": []
+			"type": "Point"
 		},
 		"properties": {
 			"marker-color": "#63b6e5",
