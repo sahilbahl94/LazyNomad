@@ -1,15 +1,5 @@
 // map.scrollWheelZoom.disable();
 
-$(document).on("ready", function () {
-  L.mapbox.accessToken = '<%= ENV["mapbox_id"] %>';
-  var map = L.mapbox.map('map', 'mapbox.streets');
-
-  addMapSearchTool(map);
-  addVenues(map, gon.geoJSON);
-  sidebarNavigator(map);
-  findMyLocation(map);
-
-});
 
 function addVenues (map, geojson)  {
   var myLayer = L.mapbox.featureLayer(geojson).addTo(map);

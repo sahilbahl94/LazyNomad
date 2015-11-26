@@ -15,3 +15,14 @@
 //= require turbolinks
 //= require bootstrap-sprockets
 //= require_tree .
+
+$(document).on("ready", function () {
+  L.mapbox.accessToken = '<%= ENV["mapbox_id"] %>';
+  var map = L.mapbox.map('map', 'mapbox.streets');
+
+  addMapSearchTool(map);
+  addVenues(map, gon.geoJSON);
+  sidebarNavigator(map);
+  findMyLocation(map);
+
+});
