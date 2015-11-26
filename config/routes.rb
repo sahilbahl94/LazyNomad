@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
+    root to: "queries#index"
   devise_for :users
-  get "/" => "queries#index"
-  resources :queries
+  resources :queries, only: [:index]
+
+  get "/saved" => "queries#saved"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

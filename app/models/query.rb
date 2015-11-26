@@ -1,5 +1,7 @@
 class Query < ActiveRecord::Base
 
+belongs_to :user
+
 	def exploreby_location(location)
 		foursquare_id = ENV["foursquare_id"]
 		foursquare_secret = ENV["foursquare_secret"]
@@ -39,7 +41,8 @@ class Query < ActiveRecord::Base
 	location_info = {
 		:type => "Feature", 
 		:geometry => {
-			:type => "Point"
+			:type => "Point",
+			:coordinates => []
 		},
 		:properties => {
 			"marker-color": "#63b6e5",
