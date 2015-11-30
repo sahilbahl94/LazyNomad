@@ -15,14 +15,51 @@
 //= require turbolinks
 //= require bootstrap-sprockets
 //= require_tree .
+"use strict"
 
-$(document).on("ready", function () {
+$(document).on("ready", function () {	
+  
   L.mapbox.accessToken = "<%= ENV['mapbox_id'] %>";
   var map = L.mapbox.map('map', 'mapbox.streets');
 
-  addMapSearchTool(map);
-  addVenues(map, gon.geoJSON);
-  sidebarNavigator(map);
   findMyLocation(map);
+  addMapSearchTool(map);
+  sidebarNavigator(map);
+
+  $("#search-form").on("submit", addVenues(map,gon.geoJSON_bylocation));
+
+  $("#retrieveLocation").on('click', function (event) {
+  	event.preventDefault();
+  	var coords = $("#push_location").val();
+  	var URL = "/near_me?coords=" + coords + "";
+  	$.ajax({
+  		url: URL,
+  		success: handleSuccess,
+  		error: handleError
+  		});
+   });
+
+  function handleSuccess (data) {
+  	$(".sidebar .row").empty();
+  	var newLayer = L.mapbox.featureLayer(data).addTo(map);
+
+  	data.forEach(function (object) {
+  		var contents = $(".sidebar .row").prepend(
+  			"<div class='thumbnail venue'><img src='" + object.properties.image_url + 
+  			"'><div class='caption'><h3 data-lat='" + object.geometry.coordinates[1] + 
+  			"' data-lng= '"+ object.geometry.coordinates[0] + "'>" + object.properties.title +
+  			"</h3><p>" + object.properties.description + "</p><p> Rating: " + object.properties.rating +
+  			"</p><p>" + "</p><p> Category: " + object.properties.category + "</p><p>" +
+  			"<button class='btn btn-primary' type='submit'> Save </button>" +
+  			"<a href='#' class='btn btn-default' role='button'> Button </a></p></div></div>"
+  			);
+  	});
+  	sidebarNavigator(map);
+  }
+
+  function handleError(jqXHR, status, errorThrown) {
+  alert("Something wrong happened: " + status + ", " + errorThrown);
+	};
 
 });
+

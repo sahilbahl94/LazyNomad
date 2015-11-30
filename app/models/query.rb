@@ -2,25 +2,31 @@ class Query < ActiveRecord::Base
 
 belongs_to :user
 
-	def exploreby_location(location)
-		foursquare_id = ENV["foursquare_id"]
-		foursquare_secret = ENV["foursquare_secret"]
+	def initialize
+		@foursquare_id = ENV["foursquare_id"]
+		@foursquare_secret = ENV["foursquare_secret"]
+		@client = Foursquare2::Client.new(:client_id => @foursquare_id, :client_secret => @foursquare_secret)
+	end
 
-		client = Foursquare2::Client.new(:client_id => foursquare_id, :client_secret => foursquare_secret )
-		response = client.explore_venues(:near => location, :v => 20140806, :m => "foursquare", :section => "sights", :venuePhotos => 1)
+	def explore_by_location(search_term)
+		response = @client.explore_venues(:near => search_term, :v => 20140806, :m => "foursquare", :section => "sights", :venuePhotos => 1)
+		get_info(response)
 		#use Query.create(name: "ef", something.. ) here.
 	end
 
-	def get_info(location)
+	def explore_by_coords(coords)
+		response = @client.explore_venues(:ll => coords, :v => 20140806, :m => "foursquare", :section => "sights", :venuePhotos => 1, :radius => 50000)
+		get_info(response)
+	end
+
+	def get_info(api_response)
 		results = []
-		response = exploreby_location(location)
-		response.groups[0].items do |item|
+		api_response.groups[0].items do |item|
 			item.each do |i|
 				location_info = geo_format
 				icon_size = "32"
 				image_size = "original"
-
-				location_info[:properties][:city] = location
+				location_info[:properties][:city] = i.venue.location.city
 				location_info[:properties][:venue_id] = i.venue.id
 				location_info[:properties][:title] = i.venue.name
 				location_info[:properties][:category] = i.venue.categories[0].name

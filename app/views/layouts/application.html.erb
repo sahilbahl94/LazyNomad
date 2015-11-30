@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>LazyNomad</title>
-  <%= include_gon %>
+  <%= Gon::Base.render_data({}) %>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
 <script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet'/>
@@ -12,7 +12,6 @@
 </head>
 
 <body>
-
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -30,12 +29,15 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
      
       <%= form_tag(queries_path, :method => "get", class: "navbar-form searchForm navbar-left", id: "search-form") do %>
-        <div class="form-group">
         <%= text_field_tag :search, params[:search], class: "input-field", placeholder: "Where do you want to go?" %>
          <%= button_to("Search!", queries_path, :method => "get", class: "btn btn-primary") %>
-        <button class="btn btn-primary geolocate">Search Near Me </button>
-        </div>
       <% end %>
+
+      <%= form_tag("/near_me", :method => "get", class: "navbar-form navbar-left", id: "retrieveLocation") do %>
+        <%= hidden_field_tag(:push_location) %>
+        <%= submit_tag("Search Near Me!", class: "btn btn-primary") %>
+      <% end %>
+    
       <% if user_signed_in? %>
       <ul class="nav navbar-nav navbar-right">
         <li><%= link_to("Hello #{current_user.username}!", "#") %></li>

@@ -1,9 +1,12 @@
 // map.scrollWheelZoom.disable();
 
-
 function addVenues (map, geojson)  {
-  var myLayer = L.mapbox.featureLayer(geojson).addTo(map);
-  showMyLocation(map, myLayer);
+  var addLayer = L.mapbox.featureLayer(geojson).addTo(map);
+  // showMyLocation(map, myLayer);
+}
+
+function nearMe (map, geojson) {
+  var newLayer = L.mapbox.featureLayer(geojson).addTo(map);
 }
 
 function addMapSearchTool (map) {
@@ -19,40 +22,55 @@ function sidebarNavigator (map) {
 }
 
 function findMyLocation (map) {
-  var geolocate = $(".geolocate");
-  if (!navigator.geolocation) {
-    geolocate.innerHTML = 'Geolocation is not available';
-  } else {
-      geolocate.on('click', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          map.locate();
-      });
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(onLocation, onError);
+    console.log("Location Found!");
+  }
+
+  function onLocation (position) {
+  $("#push_location").val([position.coords.latitude, position.coords.longitude]);
+  }
+
+  function onError (err) {
+  alert("Could not locate your current position, " + err)
   }
 }
 
-function showMyLocation (map, layer) {
-  map.on('locationfound', function(e) {
-      map.fitBounds(e.bounds);
+// function addMyMarker (map) {
+//   var coords = $("#push_location").val()
+//   debugger
+//   var marker = L.marker(new L.LatLng(parseInt(coords[0]),parseInt(coords[1])), {
+//        icon: L.mapbox.marker.icon({
+//            'marker-symbol': 'star',
+//            'marker-size': 'large',
+//            'marker-color': '#ff8888'
+//        }),
+//    });
+// }
 
-      layer.setGeoJSON({
-          type: 'Feature',
-          geometry: {
-              type: 'Point',
-              coordinates: [e.latlng.lng, e.latlng.lat]
-          },
-          properties: {
-              'title': 'Current location!',
-              'marker-color': '#ff8888',
-              "marker-size": "large",
-              'marker-symbol': 'star'
-          }
-      });
-  });
 
-  var geolocate = $(".geolocate");
-  map.on('locationerror', function() {
-    geolocate.innerHTML = 'Position could not be found';
-  });
+//my previous work
+// function showMyLocation (map, layer) {
+//   map.on('locationfound', function(e) {
+//       map.fitBounds(e.bounds);
 
-}
+//       layer.setGeoJSON({
+//           type: 'Feature',
+//           geometry: {
+//               type: 'Point',
+//               coordinates: [e.latlng.lng, e.latlng.lat]
+//           },
+//           properties: {
+//               'title': 'Current location!',
+//               'marker-color': '#ff8888',
+//               "marker-size": "large",
+//               'marker-symbol': 'star'
+//           }
+//       });
+//   });
+
+//   map.on('locationerror', function() {
+//     alert('Position could not be found');
+//   });
+
+// }

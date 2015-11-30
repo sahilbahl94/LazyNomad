@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   resources :queries, only: [:index]
 
   get "/saved" => "queries#saved"
+  get "/near_me" => "queries#near_me"
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
