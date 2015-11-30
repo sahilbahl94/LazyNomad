@@ -11,7 +11,10 @@
                     <p><%= location[:properties][:description] %></p>
                     <p> Rating: <%= location[:properties][:rating] %> </p>
                     <p> Category: <%= location[:properties][:category] %> </p>
-                    <p><%= button_to("Save", "/saved", method: :get, class: "btn btn-primary") %><a href="#" class="btn btn-default" role="button">Button</a></p>
+                    <p>
+                      <button class='btn btn-primary' action='/saved'>Save</button>
+                      <a href="#" class="btn btn-default" role="button">Button</a>
+                    </p>
                   </div>
                 </div>
                 <% end %>
