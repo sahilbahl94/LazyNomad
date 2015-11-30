@@ -15,7 +15,7 @@ belongs_to :user
 	end
 
 	def explore_by_coords(coords)
-		response = @client.explore_venues(:ll => coords, :v => 20140806, :m => "foursquare", :section => "sights", :venuePhotos => 1, :radius => 50000)
+		response = @client.explore_venues(:ll => coords, :v => 20140806, :m => "foursquare", :section => "sights", :venuePhotos => 1)
 		get_info(response)
 	end
 

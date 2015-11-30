@@ -1,8 +1,33 @@
 // map.scrollWheelZoom.disable();
+function clickToSetView (map) {
+ map.eachLayer(function (layer) {
+    layer.on('click', function (e) {
+      map.setView(e.layer.getLatLng());
+    });
+   });
+}
+
+
+function clickToSetView2 (map, targetLayer) {
+  targetLayer.eachLayer(function (layer) {
+    layer.on('click', function () {
+      map.setView(layer.getLatLng());
+      });
+    });
+}
+
+
+function addClusters (map,layer) {
+  var clusterLayer = L.markerClusterGroup();
+  clusterLayer.addLayer(layer);
+  map.addLayer(clusterLayer);
+}
+
 
 function addVenues (map, geojson)  {
-  var addLayer = L.mapbox.featureLayer(geojson).addTo(map);
-  // showMyLocation(map, myLayer);
+  var addLayer = L.mapbox.featureLayer(geojson);
+  clickToSetView(map);
+  addClusters(map,addLayer);
 }
 
 function addMapSearchTool (map) {
@@ -23,9 +48,12 @@ function searchNearMe (map) {
 
   function handleSuccess (data) {
     $(".sidebar .row").empty();
-    var newLayer = L.mapbox.featureLayer(data).addTo(map);
+    var coords = $("#push_location").val();
+    var newLayer = L.mapbox.featureLayer(data);;
     renderSidebar(data);
     sidebarNavigator(map);
+    clickToSetView2(map, newLayer);
+    addClusters(map,newLayer);
   }
 
   function handleError(jqXHR, status, errorThrown) {
@@ -60,50 +88,30 @@ function findMyLocation (map) {
     console.log("Location Found!");
   }
 
+
   function onLocation (position) {
   $("#push_location").val([position.coords.latitude, position.coords.longitude]);
-  }
+  
+  var marker = L.mapbox.featureLayer({    
+      type: 'Feature',
+      geometry: {
+          type: 'Point',
+          coordinates: [
+            position.coords.longitude,
+            position.coords.latitude
+          ]
+      },
+      properties: {
+          title: 'You are here!',
+          'marker-size': 'large',
+          'marker-color': '#ff8888',
+          'marker-symbol': 'star'
+      }
+  }).addTo(map);
+  clickToSetView2(map,marker);
+}
 
   function onError (err) {
   alert("Could not locate your current position, " + err)
   }
 }
-
-// function addMyMarker (map) {
-//   var coords = $("#push_location").val()
-//   debugger
-//   var marker = L.marker(new L.LatLng(parseInt(coords[0]),parseInt(coords[1])), {
-//        icon: L.mapbox.marker.icon({
-//            'marker-symbol': 'star',
-//            'marker-size': 'large',
-//            'marker-color': '#ff8888'
-//        }),
-//    });
-// }
-
-
-//my previous work
-// function showMyLocation (map, layer) {
-//   map.on('locationfound', function(e) {
-//       map.fitBounds(e.bounds);
-
-//       layer.setGeoJSON({
-//           type: 'Feature',
-//           geometry: {
-//               type: 'Point',
-//               coordinates: [e.latlng.lng, e.latlng.lat]
-//           },
-//           properties: {
-//               'title': 'Current location!',
-//               'marker-color': '#ff8888',
-//               "marker-size": "large",
-//               'marker-symbol': 'star'
-//           }
-//       });
-//   });
-
-//   map.on('locationerror', function() {
-//     alert('Position could not be found');
-//   });
-
-// }
