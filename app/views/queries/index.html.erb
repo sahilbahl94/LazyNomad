@@ -7,14 +7,17 @@
                 <div class="thumbnail venue">
                   <img class="venue-image" src= <%= location[:properties][:image_url] %> />
                   <div class="caption">
+                    <form action="/saved" class="venue-form">
                     <h3 data-lng=<%= location[:geometry][:coordinates][0] %> data-lat= <%= location[:geometry][:coordinates][1] %> > <%= location[:properties][:title] %></h3>
                     <p><%= location[:properties][:description] %></p>
                     <p> Rating: <%= location[:properties][:rating] %> </p>
                     <p> Category: <%= location[:properties][:category] %> </p>
-                    <p>
-                      <button class='btn btn-primary' action='/saved'>Save</button>
-                      <a href="#" class="btn btn-default" role="button">Button</a>
+                    <p> 
+                      <button class='btn btn-primary save-button' type='submit'>Save</button>
+                      <a href="#" class="btn btn-default save-list" role="button">Button</a>
                     </p>
+                    <p class='venue-id' hidden><%= location[:properties][:venue_id] %></p>
+                    </form>
                   </div>
                 </div>
                 <% end %>

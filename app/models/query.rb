@@ -19,6 +19,11 @@ belongs_to :user
 		get_info(response)
 	end
 
+	def find_venue(id)
+		response = @client.venue(id, :v => 20140806)
+		binding.pry
+	end
+
 	def get_info(api_response)
 		results = []
 		api_response.groups[0].items do |item|
@@ -58,6 +63,9 @@ belongs_to :user
 		}
 	}
 	end
+
+
+
 end
 	
 

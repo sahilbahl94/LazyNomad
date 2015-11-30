@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   devise_for :users
   resources :queries, only: [:index]
 
-  get "/saved" => "queries#saved"
+  post "/saved" => "queries#saved"
   get "/near_me" => "queries#near_me"
 
   # The priority is based upon order of creation: first created -> highest priority.

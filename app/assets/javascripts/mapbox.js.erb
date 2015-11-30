@@ -16,7 +16,6 @@ function clickToSetView2 (map, targetLayer) {
     });
 }
 
-
 function addClusters (map,layer) {
   var clusterLayer = L.markerClusterGroup();
   clusterLayer.addLayer(layer);
@@ -26,8 +25,8 @@ function addClusters (map,layer) {
 
 function addVenues (map, geojson)  {
   var addLayer = L.mapbox.featureLayer(geojson);
-  clickToSetView(map);
   addClusters(map,addLayer);
+  clickToSetView(map);
 }
 
 function addMapSearchTool (map) {
@@ -61,24 +60,11 @@ function searchNearMe (map) {
   };
 }
 
-function renderSidebar (data) {
-  data.forEach(function (venue) {
-        var contents = $(".sidebar .row").prepend(
-          "<div class='thumbnail venue'><img src='" + venue.properties.image_url + 
-          "'><div class='caption'><h3 data-lat='" + venue.geometry.coordinates[1] + 
-          "' data-lng= '"+ venue.geometry.coordinates[0] + "'>" + venue.properties.title +
-          "</h3><p>" + venue.properties.description + "</p><p> Rating: " + venue.properties.rating +
-          "</p><p>" + "</p><p> Category: " + venue.properties.category + "</p><p>" +
-          "<button class='btn btn-primary' type='submit'> Save </button>" +
-          "<a href='#' class='btn btn-default' role='button'> Button </a></p></div></div>"
-          );
-      });
-}
 
 function sidebarNavigator (map) {
   $(".venue").on('click', 'h3', function () {
     var self = this;
-    map.setView([self.dataset.lat,self.dataset.lng], 14)
+    map.setView([self.dataset.lat,self.dataset.lng], 16);
   });
 }
 
@@ -114,4 +100,32 @@ function findMyLocation (map) {
   function onError (err) {
   alert("Could not locate your current position, " + err)
   }
+}
+
+
+function saveVenue () {
+  $(".venue-form").on("submit", function (event) {
+    event.preventDefault();
+    var saved = $(this).children("p").children(".save-button");
+    saved.empty();
+    saved.append("Saved!");
+
+    $.post("/saved", {
+      venue_id: $(this).children(".venue-id").text()
+    });
+  });
+}
+
+
+function renderSidebar (data) {
+  data.forEach(function (venue) {
+        var contents = $(".sidebar .row").prepend(
+          "<div class='thumbnail venue'><img src='" + venue.properties.image_url + 
+          "'><div class='caption'><form class='venue-form' action='/saved'><h3 data-lat='" +
+          venue.geometry.coordinates[1] + "' data-lng= '"+ venue.geometry.coordinates[0] +
+          "'>" + venue.properties.title + "</h3><p>" + venue.properties.description +
+          "</p><p> Rating: " + venue.properties.rating + "</p><p>" + "</p><p> Category: " +
+          venue.properties.category + "</p></form></div></div>" 
+          );
+      });
 }
