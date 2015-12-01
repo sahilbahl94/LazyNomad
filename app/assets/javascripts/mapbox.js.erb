@@ -76,44 +76,30 @@ function findMyLocation (map) {
 
 
   function onLocation (position) {
-  $("#push_location").val([position.coords.latitude, position.coords.longitude]);
-  
-  var marker = L.mapbox.featureLayer({    
-      type: 'Feature',
-      geometry: {
-          type: 'Point',
-          coordinates: [
-            position.coords.longitude,
-            position.coords.latitude
-          ]
-      },
-      properties: {
-          title: 'You are here!',
-          'marker-size': 'large',
-          'marker-color': '#ff8888',
-          'marker-symbol': 'star'
-      }
-  }).addTo(map);
-  clickToSetView2(map,marker);
-}
+    $("#push_location").val([position.coords.latitude, position.coords.longitude]);
+    
+    var marker = L.mapbox.featureLayer({    
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [
+              position.coords.longitude,
+              position.coords.latitude
+            ]
+        },
+        properties: {
+            title: 'You are here!',
+            'marker-size': 'large',
+            'marker-color': '#ff8888',
+            'marker-symbol': 'star'
+        }
+    }).addTo(map);
+    clickToSetView2(map,marker);
+  }
 
   function onError (err) {
   alert("Could not locate your current position, " + err)
   }
-}
-
-
-function saveVenue () {
-  $(".venue-form").on("submit", function (event) {
-    event.preventDefault();
-    var saved = $(this).children("p").children(".save-button");
-    saved.empty();
-    saved.append("Saved!");
-
-    $.post("/saved", {
-      venue_id: $(this).children(".venue-id").text()
-    });
-  });
 }
 
 
@@ -125,7 +111,28 @@ function renderSidebar (data) {
           venue.geometry.coordinates[1] + "' data-lng= '"+ venue.geometry.coordinates[0] +
           "'>" + venue.properties.title + "</h3><p>" + venue.properties.description +
           "</p><p> Rating: " + venue.properties.rating + "</p><p>" + "</p><p> Category: " +
-          venue.properties.category + "</p></form></div></div>" 
+          venue.properties.category + "</p><p><button class='btn btn-primary save-button' type='submit'>Save</button><a class='btn btn-default more-info' role='button'>More Info</a></p><p class='venue-id' hidden>"
+          + venue.properties.venue_id + "</p></form></div></div>"
           );
       });
 }
+
+function saveVenue () {
+  $(".venue-form").on("submit", function (event) {
+    event.preventDefault();
+    if (gon.current_user) {
+      var saved = $(this).children("p").children(".save-button");
+      saved.empty();
+      saved.append("Saved!");
+      $.post("/saved", {
+        venue_id: $(this).children(".venue-id").text()
+      });
+    } else {
+      alert("You must be signed in to access this feature.")
+    }
+
+  });
+}
+
+
+

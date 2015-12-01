@@ -2,26 +2,29 @@ class Query < ActiveRecord::Base
 
 belongs_to :user
 
-	def initialize
+	def setup
 		@foursquare_id = ENV["foursquare_id"]
 		@foursquare_secret = ENV["foursquare_secret"]
 		@client = Foursquare2::Client.new(:client_id => @foursquare_id, :client_secret => @foursquare_secret)
 	end
 
 	def explore_by_location(search_term)
-		response = @client.explore_venues(:near => search_term, :v => 20140806, :m => "foursquare", :section => "sights", :venuePhotos => 1)
+		response = setup.explore_venues(:near => search_term, :v => 20140806, :m => "foursquare", :section => "sights", :venuePhotos => 1)
 		get_info(response)
 		#use Query.create(name: "ef", something.. ) here.
 	end
 
 	def explore_by_coords(coords)
-		response = @client.explore_venues(:ll => coords, :v => 20140806, :m => "foursquare", :section => "sights", :venuePhotos => 1)
+		response = setup.explore_venues(:ll => coords, :v => 20140806, :m => "foursquare", :section => "sights", :venuePhotos => 1)
 		get_info(response)
 	end
 
 	def find_venue(id)
-		response = @client.venue(id, :v => 20140806)
-		binding.pry
+		response = setup.venue(id, :v => 20140806)
+	end
+
+	def venue_tips(id)
+		response = setup.venue_tips(id, :v => 20140806)
 	end
 
 	def get_info(api_response)
