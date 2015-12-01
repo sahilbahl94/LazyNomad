@@ -14,10 +14,11 @@
                     <p> Category: <%= location[:properties][:category] %> </p>
                     <p> 
                       <button class='btn btn-primary save-button' type='submit'>Save</button>
-                      <button class="btn btn-default more-info" type='submit'>More Info</button>
+                      <button class="btn btn-default more-info" data-toggle="modal" data-target="#myModal" type='submit'>More Info</button>
                     </p>
                     <p class='venue-id' hidden><%= location[:properties][:venue_id] %></p>
                     </form>
+
                   </div>
                 </div>
                 <% end %>

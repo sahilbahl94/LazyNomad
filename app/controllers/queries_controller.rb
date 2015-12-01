@@ -32,6 +32,33 @@ class QueriesController < ApplicationController
 		#Button 'show all' should point to seperate get 
 		# 	with all saved posts of the current user. accessed only through authenticate_user.
 
+		# response.photos.groups[0].items.count
+
+	def show
+		query = Query.new
+		response = query.find_venue(params[:venue_id])
+		tips = []
+		images = []
+		timings = []
+
+		response.tips.groups[0].items.each do |item|
+			if item['text']
+				tips << item['text']
+			end
+		end
+
+		response.photos.groups[0].items.each do |item|
+			if item['prefix']
+				images << item['prefix'] + "original" + item['suffix']
+			end
+		end
+		
+		if response['popular']['timeframes']
+			timings << response['popular']['timeframes']
+		end
+		render json: {tips: tips, images: images, timings: timings}
+	end
+
 	def near_me
 		if params[:coords]
 		coords = params[:coords].split(",")
