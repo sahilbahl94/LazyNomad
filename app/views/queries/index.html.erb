@@ -8,7 +8,7 @@
                   <img class="venue-image" src= <%= location[:properties][:image_url] %> />
                   <div class="caption">
                     <form action="/saved" class="venue-form">
-                    <h3 data-lng=<%= location[:geometry][:coordinates][0] %> data-lat= <%= location[:geometry][:coordinates][1] %> > <%= location[:properties][:title] %></h3>
+                    <a class="pointer"><h3 data-lng=<%= location[:geometry][:coordinates][0] %> data-lat= <%= location[:geometry][:coordinates][1] %> > <%= location[:properties][:title] %></h3></a>
                     <p><%= location[:properties][:description] %></p>
                     <p> Rating: <%= location[:properties][:rating] %> </p>
                     <p> Category: <%= location[:properties][:category] %> </p>
@@ -18,7 +18,6 @@
                     </p>
                     <p class='venue-id' hidden><%= location[:properties][:venue_id] %></p>
                     </form>
-
                   </div>
                 </div>
                 <% end %>

@@ -1,4 +1,5 @@
 // map.scrollWheelZoom.disable();
+
 function clickToSetView (map) {
  map.eachLayer(function (layer) {
     layer.on('click', function (e) {
@@ -6,7 +7,6 @@ function clickToSetView (map) {
     });
    });
 }
-
 
 function clickToSetView2 (map, targetLayer) {
   targetLayer.eachLayer(function (layer) {
@@ -20,14 +20,25 @@ function addClusters (map,layer) {
   var clusterLayer = L.markerClusterGroup();
   clusterLayer.addLayer(layer);
   map.addLayer(clusterLayer);
+  map.fitBounds(clusterLayer.getBounds());
 }
 
 
 function addVenues (map, geojson)  {
-  var addLayer = L.mapbox.featureLayer(geojson);
-  addClusters(map,addLayer);
+  deleteAllLayers(map);
+  var search_layer = L.mapbox.featureLayer(geojson);
+  addClusters(map,search_layer);
   clickToSetView(map);
 }
+
+function deleteAllLayers (map) {
+  map.eachLayer(function(layer) {
+    if (layer instanceof L.Marker) {
+      map.removeLayer(layer);
+    }
+  });
+}
+
 
 function addMapSearchTool (map) {
   map.addControl(L.mapbox.geocoderControl('mapbox.places'));
@@ -36,6 +47,8 @@ function addMapSearchTool (map) {
 function searchNearMe (map) {
   $("#retrieveLocation").on('click', function (event) {
     event.preventDefault();
+    deleteAllLayers(map)
+    findMyLocation(map)
     var coords = $("#push_location").val();
     var URL = "/near_me?coords=" + coords + "";
     $.ajax({
@@ -46,7 +59,7 @@ function searchNearMe (map) {
    });
 
   function handleSuccess (data) {
-    $(".sidebar .row").empty();
+    $(".sidebar .row").html("");
     var coords = $("#push_location").val();
     var newLayer = L.mapbox.featureLayer(data);;
     renderSidebar(data);
@@ -54,12 +67,11 @@ function searchNearMe (map) {
     clickToSetView2(map, newLayer);
     addClusters(map,newLayer);
   }
-
-  function handleError(jqXHR, status, errorThrown) {
-  alert("Something wrong happened: " + status + ", " + errorThrown);
-  };
 }
 
+function handleError(jqXHR, status, errorThrown) {
+alert("Something wrong happened: " + status + ", " + errorThrown);
+};
 
 function sidebarNavigator (map) {
   $(".venue").on('click', 'h3', function () {
@@ -104,21 +116,23 @@ function findMyLocation (map) {
 
 
 function renderSidebar (data) {
+  var html = "";
   data.forEach(function (venue) {
-        var contents = $(".sidebar .row").prepend(
-          "<div class='thumbnail venue'><img src='" + venue.properties.image_url + 
-          "'><div class='caption'><form class='venue-form' action='/saved'><h3 data-lat='" +
+        html += "<div class='thumbnail venue'><img src='" + venue.properties.image_url + 
+          "'><div class='caption'><form class='venue-form' method='post' action='/saved'><a class='pointer'><h3 data-lat='" +
           venue.geometry.coordinates[1] + "' data-lng= '"+ venue.geometry.coordinates[0] +
-          "'>" + venue.properties.title + "</h3><p>" + venue.properties.description +
+          "'>" + venue.properties.title + "</h3></a><p>" + venue.properties.description +
           "</p><p> Rating: " + venue.properties.rating + "</p><p>" + "</p><p> Category: " +
-          venue.properties.category + "</p><p><button class='btn btn-primary save-button' type='submit'>Save</button><a class='btn btn-default more-info' role='button'>More Info</a></p><p class='venue-id' hidden>"
-          + venue.properties.venue_id + "</p></form></div></div>"
-          );
+          venue.properties.category + "</p><p><button class='btn btn-primary save-button'" + 
+          " type='submit'>Save</button><button class='btn btn-default more-info' data-toggle='modal' data-target='#myModal' type='submit'>" +
+          "More Info</button></p><p class='venue-id' hidden>" + venue.properties.venue_id +
+          "</p></form></div></div>";
       });
+  $(".sidebar .row").append(html);
 }
 
 function saveVenue () {
-  $(".venue-form").on("submit", function (event) {
+  $("body").on("submit", ".venue-form", function (event) {
     event.preventDefault();
     if (gon.current_user) {
       var saved = $(this).children("p").children(".save-button");
@@ -133,6 +147,29 @@ function saveVenue () {
 
   });
 }
+
+function showSavedPlaces (map) {
+  $(".saved-places").on('click', function (event) {
+    event.preventDefault();
+    $.ajax({
+      url: "/saved_places",
+      success: showPlaces,
+      error: handleError
+    })
+
+    function showPlaces (data) {
+      deleteAllLayers(map)
+      var newLayer = L.mapbox.featureLayer(data)
+      clickToSetView2(map, newLayer);
+      addClusters(map,newLayer);
+    }
+  });
+}
+
+
+
+
+
 
 
 

@@ -32,7 +32,7 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><%= link_to("Edit Profile", edit_user_registration_path) %></li>
-            <li><a href="#">Something else here</a></li>
+            <li><a href="/saved_places" class="saved-places">My Saved Places</a></li>
             <li role="separator" class="divider"></li>
             <li><%= link_to("Log out", destroy_user_session_path, method: :delete) %></li>
           </ul>
@@ -46,7 +46,6 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><%= link_to("Edit Profile", edit_user_registration_path) %></li>
-            <li><a href="#">Something else here</a></li>
             <li role="separator" class="divider"></li>
             <li><%= link_to("Log out", destroy_user_session_path, method: :delete) %></li>
           </ul>

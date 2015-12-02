@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   post "/saved" => "queries#saved"
   get "/near_me" => "queries#near_me"
   get "/show" => "queries#show"
+  get "/saved_places" => "queries#saved_places"
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
