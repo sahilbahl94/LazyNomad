@@ -1,14 +1,7 @@
 // map.scrollWheelZoom.disable();
+// map.fitBounds(layer.getBounds);
 
-function clickToSetView (map) {
- map.eachLayer(function (layer) {
-    layer.on('click', function (e) {
-      map.setView(e.layer.getLatLng());
-    });
-   });
-}
-
-function clickToSetView2 (map, targetLayer) {
+function clickToSetView (map, targetLayer) {
   targetLayer.eachLayer(function (layer) {
     layer.on('click', function () {
       map.setView(layer.getLatLng());
@@ -20,15 +13,43 @@ function addClusters (map,layer) {
   var clusterLayer = L.markerClusterGroup();
   clusterLayer.addLayer(layer);
   map.addLayer(clusterLayer);
-  map.fitBounds(clusterLayer.getBounds());
 }
 
-
 function addVenues (map, geojson)  {
-  deleteAllLayers(map);
-  var search_layer = L.mapbox.featureLayer(geojson);
-  addClusters(map,search_layer);
-  clickToSetView(map);
+  $("#search-form").on("submit", function (event) {
+    event.preventDefault();
+    var self = this;
+    var searchstring = $("#search").val();
+    $.ajax({
+      url: "/queries",
+      data: {search: searchstring},
+      success: handleSuccess
+    })
+
+    function handleSuccess (data) {
+      $(".sidebar .row").html("");
+      var newLayer = L.mapbox.featureLayer(data);
+      deleteAllLayers(map)
+      renderSidebar(data);
+      sidebarNavigator(map);
+      addClusters(map,newLayer);
+      clickToSetView(map, newLayer);
+      map.fitBounds(newLayer.getBounds());
+    }
+    
+  })
+    // deleteAllLayers(map);
+    // $.ajax({
+    //   url: "/index",
+    //   data: {$("save-button").text()},
+    //   success: function (data) {
+    //     debugger
+    //   }
+    // })
+    // var search_layer = L.mapbox.featureLayer(geojson);
+    // addClusters(map,search_layer);
+    // clickToSetView(map);
+    // map.fitBounds(search_layer.getBounds());
 }
 
 function deleteAllLayers (map) {
@@ -39,7 +60,6 @@ function deleteAllLayers (map) {
   });
 }
 
-
 function addMapSearchTool (map) {
   map.addControl(L.mapbox.geocoderControl('mapbox.places'));
 }
@@ -47,7 +67,6 @@ function addMapSearchTool (map) {
 function searchNearMe (map) {
   $("#retrieveLocation").on('click', function (event) {
     event.preventDefault();
-    deleteAllLayers(map)
     findMyLocation(map)
     var coords = $("#push_location").val();
     var URL = "/near_me?coords=" + coords + "";
@@ -61,11 +80,14 @@ function searchNearMe (map) {
   function handleSuccess (data) {
     $(".sidebar .row").html("");
     var coords = $("#push_location").val();
-    var newLayer = L.mapbox.featureLayer(data);;
+    var newLayer = L.mapbox.featureLayer(data);
+    deleteAllLayers(map)
+    findMyLocation(map)
     renderSidebar(data);
     sidebarNavigator(map);
-    clickToSetView2(map, newLayer);
     addClusters(map,newLayer);
+    clickToSetView(map, newLayer);
+    map.fitBounds(newLayer.getBounds());
   }
 }
 
@@ -82,14 +104,14 @@ function sidebarNavigator (map) {
 
 function findMyLocation (map) {
   if (navigator.geolocation) {
+    console.log('getting location');
     navigator.geolocation.getCurrentPosition(onLocation, onError);
-    console.log("Location Found!");
   }
 
-
   function onLocation (position) {
+    console.log("Location Found!");
     $("#push_location").val([position.coords.latitude, position.coords.longitude]);
-    
+
     var marker = L.mapbox.featureLayer({    
         type: 'Feature',
         geometry: {
@@ -106,11 +128,11 @@ function findMyLocation (map) {
             'marker-symbol': 'star'
         }
     }).addTo(map);
-    clickToSetView2(map,marker);
+    clickToSetView(map,marker);
   }
 
   function onError (err) {
-  alert("Could not locate your current position, " + err)
+    alert("Could not locate your current position, " + err)
   }
 }
 
@@ -129,23 +151,32 @@ function renderSidebar (data) {
           "</p></form></div></div>";
       });
   $(".sidebar .row").append(html);
+
+  showModal();
 }
 
 function saveVenue () {
   $("body").on("submit", ".venue-form", function (event) {
     event.preventDefault();
+    var self = this;
     if (gon.current_user) {
-      var saved = $(this).children("p").children(".save-button");
-      saved.empty();
-      saved.append("Saved!");
-      $.post("/saved", {
-        venue_id: $(this).children(".venue-id").text()
-      });
+      $.post(
+        "/saved",
+        {venue_id: $(self).children(".venue-id").text()},
+        function (data) {
+          if (data.saved === true) {
+            $(self).parent(".caption").prepend("You have already saved this place! Go to 'My Saved Places'")
+          } else {
+            var saved = $(self).children("p").children(".save-button")
+            saved.empty();
+            saved.text("Saved!");
+          }
+        }
+      );
     } else {
       alert("You must be signed in to access this feature.")
     }
-
-  });
+    });
 }
 
 function showSavedPlaces (map) {
@@ -160,8 +191,9 @@ function showSavedPlaces (map) {
     function showPlaces (data) {
       deleteAllLayers(map)
       var newLayer = L.mapbox.featureLayer(data)
-      clickToSetView2(map, newLayer);
       addClusters(map,newLayer);
+      clickToSetView(map, newLayer);
+      map.fitBounds(newLayer.getBounds());
     }
   });
 }

@@ -65,7 +65,7 @@ group :development, :test do
 
   gem 'pry'
 
-  gem 'rails-pry'
+  gem 'pry-rails'
 end
 
 group :development do

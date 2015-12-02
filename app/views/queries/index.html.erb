@@ -10,9 +10,9 @@
                     <form action="/saved" class="venue-form">
                     <a class="pointer"><h3 data-lng=<%= location[:geometry][:coordinates][0] %> data-lat= <%= location[:geometry][:coordinates][1] %> > <%= location[:properties][:title] %></h3></a>
                     <p><%= location[:properties][:description] %></p>
-                    <p> Rating: <%= location[:properties][:rating] %> </p>
-                    <p> Category: <%= location[:properties][:category] %> </p>
-                    <p> 
+                    <p class="features"> Rating: <%= location[:properties][:rating] %> </p>
+                    <p class="features"> Category: <%= location[:properties][:category] %> </p>
+                    <p class="buttons"> 
                       <button class='btn btn-primary save-button' type='submit'>Save</button>
                       <button class="btn btn-default more-info" data-toggle="modal" data-target="#myModal" type='submit'>More Info</button>
                     </p>
@@ -21,12 +21,9 @@
                   </div>
                 </div>
                 <% end %>
-              <% else %>
-                <h5>Use the search bar to see the map</h5>   
             <% end %>
         </div>
     </div>
-
     <div class="col-md-8 main">
       <div id='map'></div>
     </div>

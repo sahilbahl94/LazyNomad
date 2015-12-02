@@ -2,7 +2,8 @@
 	position:absolute; 
 	top:0; 
 	bottom:0;
-	height: 600px;
+  left: 0;
+	height: 100%;
 	width: 100%;
 }
 
@@ -22,10 +23,17 @@
 
 
 .sidebar {
-	height: 600px;
+	height: 100vh;
 	overflow: auto;
 }
 
+.main {
+  height: 100vh;
+}
+
+.navbar {
+  margin-bottom: 0px;
+}
 
 .venue {
       margin-left: 5px;
@@ -40,7 +48,7 @@
 .jumbotron {
   text-align: center;
   border-radius: 6px;
-  background-color: #A6BEF5;
+  background-color: #00A8E8;
 
 }
 
@@ -51,7 +59,6 @@
   width: 100%;
   height: 50%;
   overflow-x: auto;
-  background-color: #ddd;
 }
 
 .modal-images li {
@@ -71,8 +78,12 @@
 }
 
 .modal-body .tips {
-  height: 100px;
+  height: 200px;
   overflow: auto;
+}
+
+.user-tip :hover {
+  background: #eee;
 }
 
 .pointer {
@@ -82,4 +93,16 @@
 .venue-form a {
   text-decoration:none;
   text-align: center;
+}
+
+.venue-form p:first-of-type {
+  text-align: justify;
+}
+
+.venue-form .features {
+  text-align: justify;
+} 
+
+.venue-form .buttons {
+  text-align: right;
 }

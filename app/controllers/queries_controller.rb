@@ -2,6 +2,7 @@ class QueriesController < ApplicationController
 	 before_action :authenticate_user!, only: [:saved, :saved_places]
 	 skip_before_action :verify_authenticity_token, only: [:near_me, :saved]
 
+	
 	def index
 		query = Query.new
 		gon.current_user = current_user
@@ -10,31 +11,41 @@ class QueriesController < ApplicationController
 			gon.current_user = current_user
 			gon.geoJSON_bylocation = query.explore_by_location(params[:search])
 			@location_info = gon.geoJSON_bylocation
+			render json: @location_info
 		end
 	end
 
 	def saved
 		query = Query.new
 		response = query.find_venue(params[:venue_id])
-		Query.create(
-			city: response.location.city,
-			venue_id: params[:venue_id],
-			title: response.name,
-			rating: response.rating,
-			address: response.location.formattedAddress,
-			description: "#{response.location.state}, #{response.location.country}",
-			longitude: response.location.lng,
-			latitude: response.location.lat,
-			category: response.categories[0].name,
-			user_id: current_user.id,
-			icon_url: response.categories[0].icon.prefix + "bg_" + "32" + response.categories[0].icon.suffix,
-			image_url: response.photos.groups[0].items[0].prefix + "original" + response.photos.groups[0].items[0].suffix
-		)
-	end
-		#Button 'show all' should point to seperate get 
-		# 	with all saved posts of the current user. accessed only through authenticate_user.
+		check_database = Query.where(user_id: current_user.id)
+		user_saved = false
+		
+		check_database.each do |venue| 
+			if venue.venue_id == params[:venue_id]
+				user_saved = true
+				break
+			end
+		end
 
-		# response.photos.groups[0].items.count
+		if user_saved == false 
+			Query.create(
+				city: response.location.city,
+				venue_id: params[:venue_id],
+				title: response.name,
+				rating: response.rating,
+				address: response.location.formattedAddress,
+				description: "#{response.location.state}, #{response.location.country}",
+				longitude: response.location.lng,
+				latitude: response.location.lat,
+				category: response.categories[0].name,
+				user_id: current_user.id,
+				icon_url: response.categories[0].icon.prefix + "bg_" + "32" + response.categories[0].icon.suffix,
+				image_url: response.photos.groups[0].items[0].prefix + "original" + response.photos.groups[0].items[0].suffix
+			)
+		end
+		render json: {saved: user_saved}
+	end
 
 	def show
 		query = Query.new
@@ -44,18 +55,17 @@ class QueriesController < ApplicationController
 		timings = []
 
 		response.tips.groups[0].items.each do |item|
-			if item['text']
+			if item['text'] != nil
 				tips << item['text']
 			end
 		end
 
 		response.photos.groups[0].items.each do |item|
-			if item['prefix']
+			if item['prefix'] != nil
 				images << item['prefix'] + "original" + item['suffix']
 			end
 		end
-		
-		if response['popular']['timeframes']
+		if response['popular'] != nil
 			timings << response['popular']['timeframes']
 		end
 		render json: {tips: tips, images: images, timings: timings}
@@ -70,8 +80,6 @@ class QueriesController < ApplicationController
 		gon.geoJSON_bycoords = query.explore_by_coords("#{lat}, #{lng}")
 		@location_info = gon.geoJSON_bycoords
 		render json: @location_info
-		else 
-		 render json: [] #redirect_to "queries#index"
 		end
 	end
 

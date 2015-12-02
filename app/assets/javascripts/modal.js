@@ -5,8 +5,10 @@ function showModal () {
 			$("#myModal").focus();
 			$(".modal-header").children("h4").text($(this).parent().parent().children("a").children("h3").text())
 			$(".modal-images").empty();
-			$(".days").empty();
+			$(".table").empty();
 			$(".modal-body .tips").empty();
+			$(".opening-times h4").empty();
+			$(".tips-header h4").text("Tips").empty();
 			$.ajax({
 				url: "/show",
 				data: {venue_id: $(this).parent().parent().children(".venue-id").text()},
@@ -15,25 +17,36 @@ function showModal () {
 			});
 		} else {
 			alert("You must be logged in to access this feature.")
+			$('#myModal').modal('toggle');
 		}
 	});
 }
 
 function displayContents (data) {
-	data.images.forEach(function (image_url) {
-		$(".modal-images").append("<li><img src='" + image_url + "' class='modal-image'></li>")
-	})
+	if (data.images.length > 0) {
+		data.images.forEach(function (image_url) {
+			$(".modal-images").append("<li><img src='" + image_url + "' class='modal-image'></li>")
+		})	
+	} 
+	
+	if (data.timings.length > 0) {
+		$(".opening-times h4").text("Opening Hours")
+		data.timings.forEach(function (time) {
+			time.forEach(function (week) {
+				$(".time-table").append(
+					"<tr class='success'><th>" + week.days + ": </th><td>" +
+					week.open[0].renderedTime + "</td></tr>"
+				);
+			})
+		});
+	}
 
-	data.timings.forEach(function (time) {
-		time.forEach(function (week) {
-			$(".days").append("<li>" + week.days + "</li>");
-			$(".days").append("<ul class='hours'><li>" + week.open[0].renderedTime + "</li></ul>");
+	if (data.tips.length > 0) {
+		$(".tips-header h4").text("Visitor Comments")
+		data.tips.forEach(function (tip) {
+		$(".modal-body .tips").append("<span class='user-tip'><p>" + tip + "</p><span>")
 		})
-	});
-
-	data.tips.forEach(function (tip) {
-		$(".modal-body .tips").append("<p>" + tip + "</p>")
-	})
+	}
 }
 
 function showError(jqXHR, status, errorThrown) {

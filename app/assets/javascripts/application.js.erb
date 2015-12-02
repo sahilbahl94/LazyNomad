@@ -18,21 +18,25 @@
 
 "use strict"
 
-$(document).on("ready", function () {	
-  
+$(document).on("ready", function () {
+	$("sidebar").fadeIn();	
   L.mapbox.accessToken = "<%= ENV['mapbox_id'] %>";
   var map = L.mapbox.map('map', 'mapbox.streets');
 
+  console.log("location check")
   findMyLocation(map);
+  console.log("location working")
   addMapSearchTool(map);
   sidebarNavigator(map);
 
-  $("#search-form").on("submit", addVenues(map,gon.geoJSON_bylocation));
-  searchNearMe(map);
+  addVenues(map,gon.geoJSON_bylocation)
 
+  searchNearMe(map);
   saveVenue();
   showModal();
   showSavedPlaces(map);
 
 });
+
+
 
