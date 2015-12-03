@@ -22,7 +22,7 @@
 
       <%= form_tag("/near_me", :method => "get", class: "navbar-form navbar-left", id: "retrieveLocation") do %>
         <%= hidden_field_tag(:push_location) %>
-        <%= submit_tag("Search Near Me!", class: "btn btn-primary") %>
+        <%= submit_tag("Search Near Me!", class: "btn btn-primary near-me") %>
       <% end %>
     
       <% if user_signed_in? %>

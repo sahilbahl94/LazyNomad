@@ -18,7 +18,7 @@ function addClusters (map,layer) {
 function addVenues (map, geojson)  {
   $("#search-form").on("submit", function (event) {
     event.preventDefault();
-    //$('.sidebar').removeClass('hidden');
+    $('.sidebar').removeClass('hidden');
     $('.main').toggleClass('col-md-8 col-md-12')
     var self = this;
     var searchstring = $("#search").val();
@@ -69,7 +69,7 @@ function searchNearMe (map) {
    });
 
   function handleSuccess (data) {
-    //$('.sidebar').removeClass('hidden');
+    $('.sidebar').removeClass('hidden');
     $('.main').toggleClass('col-md-8 col-md-12')
     $(".sidebar .row").html("");
     var coords = $("#push_location").val();
