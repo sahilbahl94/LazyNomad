@@ -33,7 +33,9 @@
 
 .navbar {
   margin-bottom: 0px;
+  border-color: #F8F8F8;
 }
+
 
 .venue {
       margin-left: 5px;
@@ -42,7 +44,11 @@
 }
 
 .venue :hover {
-      background: #eee;
+      background: #F2FEFF;
+}
+
+body {
+  background-color: #F8F8F8;
 }
 
 .jumbotron {
@@ -105,4 +111,14 @@
 
 .venue-form .buttons {
   text-align: right;
+}
+
+.save-button {
+    margin-right: 5px;
+}
+
+.save-button:hover {
+  color: #fff;
+  background-color: #286090;
+  border-color: #285e8e; /*set the color you want here*/
 }

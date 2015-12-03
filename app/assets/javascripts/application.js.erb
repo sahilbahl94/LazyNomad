@@ -19,14 +19,14 @@
 "use strict"
 
 $(document).on("ready", function () {
-	$("sidebar").fadeIn();	
+
   L.mapbox.accessToken = "<%= ENV['mapbox_id'] %>";
   var map = L.mapbox.map('map', 'mapbox.streets');
-
   console.log("location check")
   findMyLocation(map);
   console.log("location working")
   addMapSearchTool(map);
+  $("sidebar").fadeIn()
   sidebarNavigator(map);
 
   addVenues(map,gon.geoJSON_bylocation)

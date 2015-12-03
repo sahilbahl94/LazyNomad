@@ -38,18 +38,7 @@ function addVenues (map, geojson)  {
     }
     
   })
-    // deleteAllLayers(map);
-    // $.ajax({
-    //   url: "/index",
-    //   data: {$("save-button").text()},
-    //   success: function (data) {
-    //     debugger
-    //   }
-    // })
-    // var search_layer = L.mapbox.featureLayer(geojson);
-    // addClusters(map,search_layer);
-    // clickToSetView(map);
-    // map.fitBounds(search_layer.getBounds());
+
 }
 
 function deleteAllLayers (map) {
@@ -143,10 +132,10 @@ function renderSidebar (data) {
         html += "<div class='thumbnail venue'><img src='" + venue.properties.image_url + 
           "'><div class='caption'><form class='venue-form' method='post' action='/saved'><a class='pointer'><h3 data-lat='" +
           venue.geometry.coordinates[1] + "' data-lng= '"+ venue.geometry.coordinates[0] +
-          "'>" + venue.properties.title + "</h3></a><p>" + venue.properties.description +
-          "</p><p> Rating: " + venue.properties.rating + "</p><p>" + "</p><p> Category: " +
-          venue.properties.category + "</p><p><button class='btn btn-primary save-button'" + 
-          " type='submit'>Save</button><button class='btn btn-default more-info' data-toggle='modal' data-target='#myModal' type='submit'>" +
+          "'>" + venue.properties.title + "</h3></a><p class='features'>" + venue.properties.description +
+          "</p><p class='features'> Rating: " + venue.properties.rating + "</p><p class='features'>" + "</p><p> Category: " +
+          venue.properties.category + "</p><p class='buttons'><button class='btn btn-primary save-button'" + 
+          " type='submit'>Save</button><button class='btn btn-primary more-info' data-toggle='modal' data-target='#myModal' type='submit'>" +
           "More Info</button></p><p class='venue-id' hidden>" + venue.properties.venue_id +
           "</p></form></div></div>";
       });
