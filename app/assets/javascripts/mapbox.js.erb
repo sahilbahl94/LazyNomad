@@ -16,12 +16,14 @@ function addClusters (map,layer) {
 }
 
 function addVenues (map, geojson)  {
-  $("#search-form").on("submit", function (event) {
+  $(".main-search").on("submit", function (event) {
     event.preventDefault();
-    $('.sidebar').removeClass('hidden');
-    $('.main').toggleClass('col-md-8 col-md-12')
+    $(".sidebar").removeClass("hidden");
+    $(".main").removeClass("col-md-12");
+    $(".main").addClass("col-md-8");
+    deleteAllLayers(map)
     var self = this;
-    var searchstring = $("#search").val();
+    var searchstring = $(".input-field").val();
     $.ajax({
       url: "/queries",
       data: {search: searchstring},
@@ -58,6 +60,10 @@ function addMapSearchTool (map) {
 function searchNearMe (map) {
   $("#retrieveLocation").on('click', function (event) {
     event.preventDefault();
+    $(".sidebar").removeClass("hidden");
+    $(".main").removeClass("col-md-12");
+    $(".main").addClass("col-md-8");
+    deleteAllLayers(map)
     findMyLocation(map)
     var coords = $("#push_location").val();
     var URL = "/near_me?coords=" + coords + "";
@@ -69,8 +75,6 @@ function searchNearMe (map) {
    });
 
   function handleSuccess (data) {
-    $('.sidebar').removeClass('hidden');
-    $('.main').toggleClass('col-md-8 col-md-12')
     $(".sidebar .row").html("");
     var coords = $("#push_location").val();
     var newLayer = L.mapbox.featureLayer(data);
@@ -175,6 +179,7 @@ function saveVenue () {
 function showSavedPlaces (map) {
   $(".saved-places").on('click', function (event) {
     event.preventDefault();
+    deleteAllLayers(map)
     $.ajax({
       url: "/saved_places",
       success: showPlaces,

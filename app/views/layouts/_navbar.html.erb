@@ -15,7 +15,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
      
-      <%= form_tag(queries_path, :method => "get", class: "navbar-form searchForm navbar-left", id: "search-form") do %>
+      <%= form_tag(queries_path, :method => "get", class: "navbar-form searchForm navbar-left main-search", id: "search-form") do %>
         <%= text_field_tag "search", nil, class: "input-field", placeholder: "Where do you want to go?", type: "search" %>
          <%= button_to("Search!", queries_path, :method => "get", class: "btn btn-primary") %>
       <% end %>

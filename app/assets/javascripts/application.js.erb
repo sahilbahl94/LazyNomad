@@ -17,6 +17,7 @@
 //= require_tree .
 
 $(document).on("ready", function () {
+
 	if ( $('#map').length != 0) {
 	L.mapbox.accessToken = "<%= ENV['mapbox_id'] %>";
   var map = L.mapbox.map('map', 'mapbox.streets');
@@ -32,7 +33,7 @@ $(document).on("ready", function () {
   saveVenue();
   showModal();
   showSavedPlaces(map);
-	}  
-	
+	}
+
 });
 

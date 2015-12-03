@@ -2,7 +2,6 @@ class QueriesController < ApplicationController
 	 before_action :authenticate_user!, only: [:saved, :saved_places]
 	 skip_before_action :verify_authenticity_token, only: [:near_me, :saved]
 
-	
 	def index
 		query = Query.new
 		gon.current_user = current_user

@@ -164,7 +164,6 @@ body {
   text-align: center;
 }
 
-
 .enter { 
   display: block;
   width: 80%;
@@ -178,9 +177,31 @@ body {
   cursor: pointer;
   transition: .3s background;
 }
+
 .enter:hover { 
    background: rgba(0,0,0,0.5);
 }
+
+ .img-1 {
+    background-image: url('/assets/resort.jpg');
+    background-repeat: none;
+    background-size: 100%;
+    height: 100vh;
+  }
+
+  .img-2 {
+    background-image: url('http://4hdwallpapers.com/wp-content/uploads/2013/04/Eiffel-Sunset.jpg');
+    background-repeat: none;
+    background-size: 100%;
+    height: 100vh;
+  }
+
+  .img-3 {
+    background-image: url('http://download.chip.eu/ii/206507170_c7dea3a188.jpg');
+    background-repeat: none;
+    background-size: 100%;
+    height: 100vh;
+  }
 
 @media screen and (max-width: 500px) { 
   div{width:70%;} 
