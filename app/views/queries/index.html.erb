@@ -1,6 +1,9 @@
+<%= render partial: "layouts/navbar" %>
+<%= render partial: "layouts/modal" %>
+
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-4 sidebar">
+    <div class="col-md-4 sidebar hidden">
         <div class="row">
               <% if @location_info %>
                 <% @location_info.each do |location| %>
@@ -24,7 +27,7 @@
             <% end %>
         </div>
     </div>
-    <div class="col-md-8 main">
+    <div class="col-md-12 main">
       <div id='map'></div>
     </div>
 
